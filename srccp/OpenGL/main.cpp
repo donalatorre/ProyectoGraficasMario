@@ -5,9 +5,13 @@
 #include <iomanip>
 #include <sstream>
 #include <fstream>
+#include "matrix.h"
 
 #define POINT_COUNT 24
 #define MAX_PRISM 50
+#define SCREEN_WIDTH 1280
+#define ENTR 1000
+#define SCREEN_HEIGHT 720
 GLfloat marioPoints[MAX_PRISM][POINT_COUNT * 3];
 int prismCount = 0;
 
@@ -100,12 +104,13 @@ void display (void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    
+    glScalef(scaleX, scaleY, scaleZ);
     glRotatef( rotationX, 1, 0, 0 );
     glRotatef( rotationY, 0, 1, 0 );
-    glScalef(scaleX, scaleY, scaleZ);
-    glTranslatef( traslationX, traslationY, -1.0 + traslationZ);
+    glTranslatef( traslationX, traslationY, traslationZ);
     
-    gluBuild2DMipmaps(GL_TEXTURE_2D,
+    /*gluBuild2DMipmaps(GL_TEXTURE_2D,
                       1,
                       checkImageWidth,
                       checkImageHeight,
@@ -113,29 +118,28 @@ void display (void) {
                       GL_UNSIGNED_BYTE,
                       checkImage);
     
-    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_2D);*/
     glBegin(GL_QUADS);
     
-    glColor3f(0.4f, 0.4f, 0.4f);    // Gray
     
-    for(int u = 0; u < prismCount; u++)
+    GLfloat halfScreenWidth = SCREEN_WIDTH / 2.0 / ENTR;
+    GLfloat halfScreenHeight = SCREEN_HEIGHT / 2.0 / ENTR;
+    for(int u = 0; u < prismCount; u++) {
+        glColor3f(colors[u][0], colors[u][1], colors[u][2]);    // Gray
         for(int i = 0; i < POINT_COUNT; i += 4) {
-            //glColor3f(0.0f, 1.0f, 0.0f);     // Green
             
             GLfloat arg1[] = {0.0, 0.0, 1.0, 1.0};
             GLfloat arg2[] = {0.0, 1.0, 1.0, 0.0};
             for(int j = i; j < i + 4; j++) {
-                auto entr = 1000.0f;
-                //glTexCoord2f(4.0, 0.0);
                 //glTexCoord2f(arg1[j - i], arg2[j - i]);
-                glVertex3f( marioPoints[u][j * 3]/entr, marioPoints[u][j * 3 + 1]/entr, marioPoints[u][j * 3 + 2]/entr);
-                //for(int r = 0; r < 3; r++) std::cout << marioPoints[u][j * 3 + r] << ' '; std::cout << '\n';
+                glVertex3f( marioPoints[u][j * 3]/ENTR - halfScreenWidth, marioPoints[u][j * 3 + 1]/ENTR - halfScreenHeight, marioPoints[u][j * 3 + 2]/ENTR - 0.5);
             }
         }
+    }
     
     glEnd();
     
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
     glutSwapBuffers();
 }
 
@@ -171,16 +175,16 @@ void keyboard (unsigned char key, int x, int y) {
         case '5':
             scaleZ *= scaleSpeed;
             break;
-        case 'a':
+        case 'h':
             traslationX -= translationSpeed;
             break;
-        case 'b':
+        case 'l':
             traslationX += translationSpeed;
             break;
-        case 'c':
+        case 'k':
             traslationY += translationSpeed;
             break;
-        case 'd':
+        case 'j':
             traslationY -= translationSpeed;
             break;
         case 'e':
@@ -198,19 +202,19 @@ void keyboard (unsigned char key, int x, int y) {
 }
 
 void SpecialInput(int key, int x, int y){
-    const GLfloat rotationSpeed = 0.1;
+    const GLfloat rotationSpeed = 0.5;
     bool redisp = 1;
     switch(key) {
-        case GLUT_KEY_UP:
+        case GLUT_KEY_DOWN:
             rotationX -= rotationSpeed;
             break;
-        case GLUT_KEY_DOWN:
+        case GLUT_KEY_UP:
             rotationX += rotationSpeed;
             break;
-        case GLUT_KEY_RIGHT:
+        case GLUT_KEY_LEFT:
             rotationY += rotationSpeed;
             break;
-        case GLUT_KEY_LEFT:
+        case GLUT_KEY_RIGHT:
             rotationY -= rotationSpeed;
             break;
         default:
@@ -223,7 +227,7 @@ void SpecialInput(int key, int x, int y){
 int main (int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     glutInitWindowPosition(60, 60);
     glutCreateWindow("Mario Bros");
     glutDisplayFunc(display);
