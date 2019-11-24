@@ -1,6 +1,6 @@
 // OpenGL
 #include<stdio.h>
-#include<GL/glut.h>
+#include<GLUT/glut.h>
 #include<math.h>
 #include <iostream>
 
@@ -50,7 +50,7 @@ void readImageFile(void) {
    //Reading texture file
     std::ifstream inFile;
 
-    inFile.open("/home/hi/School/8semester/Graphics/Test2/concrete-wall.ppm");
+    inFile.open("/Users/adanlopezalatorre/Documents/SemestresTec/Septimo/ComputerGraphics/ProyectoGraficasMario/base/concrete-wall.ppm");
     if (!inFile) {
         std::cout << "Unable to open file";
         exit(1); // terminate with error
@@ -91,7 +91,7 @@ void readImageFile(void) {
    }
    inFile.close();
 
-    inFile.open("/home/hi/School/8semester/Graphics/Test2/brown-wood.ppm");
+    inFile.open("/Users/adanlopezalatorre/Documents/SemestresTec/Septimo/ComputerGraphics/ProyectoGraficasMario/base/brown-wood.ppm");
     if (!inFile) {
         std::cout << "Unable to open file";
         exit(1); // terminate with error
@@ -130,7 +130,7 @@ void readImageFile(void) {
    }
    inFile.close();
 
-    inFile.open("/home/hi/School/8semester/Graphics/Test2/window.ppm");
+    inFile.open("/Users/adanlopezalatorre/Documents/SemestresTec/Septimo/ComputerGraphics/ProyectoGraficasMario/base/window.ppm");
     if (!inFile) {
         std::cout << "Unable to open file";
         exit(1); // terminate with error
@@ -835,3 +835,4 @@ int main (int argc, char** argv) {
   glutMainLoop();
   return 0;
 }
+
